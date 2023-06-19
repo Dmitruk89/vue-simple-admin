@@ -7,14 +7,15 @@
     @click:outside="closeDialog"
   >
     <v-card>
-      <v-card-title>Manage user info</v-card-title>
-      <v-divider></v-divider>
-      <v-card-text class="heigh: 100%">
-        <v-form v-if="user" v-model="valid">
+      <v-form v-if="user" ref="form" @submit.prevent="saveDialog">
+        <v-card-title>Manage user info</v-card-title>
+        <v-divider></v-divider>
+        <v-card-text class="heigh: 100%">
           <v-container>
             <v-row>
               <v-text-field
                 v-model="usernameText"
+                :rules="usernameNameRules"
                 variant="solo"
                 label="Username"
                 prepend-icon="mdi-account-outline"
@@ -24,6 +25,7 @@
             <v-row>
               <v-text-field
                 v-model="useremailText"
+                :rules="emailRules"
                 variant="solo"
                 label="Email"
                 prepend-icon="mdi-email-outline"
@@ -33,6 +35,7 @@
             <v-row>
               <v-text-field
                 v-model="userphoneText"
+                :rules="phoneNumberRules"
                 variant="solo"
                 label="Phone number"
                 prepend-icon="mdi-phone-outline"
@@ -40,15 +43,15 @@
               ></v-text-field>
             </v-row>
           </v-container>
-        </v-form>
-      </v-card-text>
-      <v-divider></v-divider>
-      <v-card-actions>
-        <v-btn color="blue-darken-1" variant="text" @click="closeDialog">
-          Close
-        </v-btn>
-        <v-btn color="success" variant="text" @click="saveDialog"> Save </v-btn>
-      </v-card-actions>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-btn color="blue-darken-1" variant="text" @click="closeDialog">
+            Close
+          </v-btn>
+          <v-btn type="submit" color="success" variant="text"> Save </v-btn>
+        </v-card-actions>
+      </v-form>
     </v-card>
   </v-dialog>
 </template>
@@ -104,7 +107,17 @@ export default defineComponent({
   },
   data() {
     return {
-      valid: false,
+      usernameNameRules: [(v: string) => !!v || "Username is required"],
+      emailRules: [
+        (v: string) => !!v || "Email is required",
+        (v: string) => /.+@.+\..+/.test(v) || "Email must be valid",
+      ],
+      phoneNumberRules: [
+        (v: string) => !!v || "Phone number is required",
+        (v: string) =>
+          /^\d{9,}$/.test(v) ||
+          "Phone number must be at least 9 symbols digits only",
+      ],
     };
   },
   methods: {
@@ -112,9 +125,16 @@ export default defineComponent({
       this.store.commit(MutationType.SetIsUserDetails, false);
       this.store.commit(MutationType.SelectUser, null);
     },
-    saveDialog() {
-      this.updateUser();
-      this.store.commit(MutationType.SetIsUserDetails, false);
+    async saveDialog() {
+      const form = this.$refs.form as any;
+      const validation = await form.validate();
+      const isValid = validation.valid;
+
+      if (isValid) {
+        this.updateUser();
+        this.store.commit(MutationType.SetIsUserDetails, false);
+        this.store.commit(MutationType.SelectUser, null);
+      }
     },
   },
 });
