@@ -1,17 +1,16 @@
 <template>
-  <v-dialog v-model="dialogValue" scrollable width="auto" min-width="500px">
+  <v-dialog
+    v-model="dialogValue"
+    scrollable
+    width="auto"
+    min-width="500px"
+    @click:outside="closeDialog"
+  >
     <v-card>
       <v-card-title>Manage {{ user?.username }} todo</v-card-title>
       <v-divider></v-divider>
       <new-item />
       <v-card-text style="height: 300px; padding: 0">
-        <!-- <div v-if="loading">
-          <v-progress-circular
-            indeterminate
-            color="primary"
-          ></v-progress-circular>
-        </div> -->
-
         <div class="ml-6" v-if="user?.todo.length === 0">No active tasks</div>
         <todo-item v-for="item in user?.todo" :key="item.id" v-bind="item" />
       </v-card-text>
@@ -28,36 +27,29 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { useStore } from "@/store";
+import { MutationType } from "@/store/mutations";
 import TodoItem from "./TodoItem.vue";
 import NewItem from "./NewItem.vue";
 export default defineComponent({
   components: { NewItem, TodoItem },
   setup() {
     const store = useStore();
-    const loading = computed(() => store.state.loading);
     const user = computed(() => store.state.selectedUser);
-    return { user, loading };
-  },
-  props: {
-    dialog: {
-      type: Boolean,
-      required: true,
-    },
+    return { user, store };
   },
   computed: {
     dialogValue: {
       get(): boolean | undefined {
-        return this.dialog === undefined ? undefined : Boolean(this.dialog);
+        return this.store.state.isTodoListOpen;
       },
-      set(value: boolean | undefined) {
-        this.$emit("update:dialog", value);
+      set(value: boolean) {
+        this.store.commit(MutationType.SetIsTodoList, value);
       },
     },
   },
-
   methods: {
     closeDialog() {
-      this.$emit("update:dialog", false);
+      this.store.commit(MutationType.SetIsPaymentDetails, false);
     },
   },
 });

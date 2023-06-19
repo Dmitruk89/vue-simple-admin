@@ -33,38 +33,23 @@
       </template>
     </v-virtual-scroll>
   </v-card>
-  <!-- <PaymentDetails :dialog="showPaymentDetails" @update:dialog="updateDialog" /> -->
-  <PaymentDetails @update:dialog="updateDialog" />
 </template>
 
 <script lang="ts">
 import { useStore } from "@/store";
-import PaymentDetails from "./PaymentDetails.vue";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { Payment } from "@/store/state";
 import { MutationType } from "@/store/mutations";
 export default {
-  components: {
-    PaymentDetails,
-  },
   setup() {
     const store = useStore();
     const payments = computed(() => store.state.payments);
-    //const showPaymentDetails = computed(() => store.state.isPaymentDetailsOpen);
-    const showPaymentDetails = ref(store.state.isPaymentDetailsOpen);
-    return { payments, store, showPaymentDetails };
+    return { payments, store };
   },
   methods: {
     onShowPaymentDetailsClick(payment: Payment) {
-      //this.showPaymentDetails = true;
-      this.store.commit(MutationType.SetPaymentDetails, true);
+      this.store.commit(MutationType.SetIsPaymentDetails, true);
       this.store.commit(MutationType.SelectPayment, payment);
-    },
-    updateDialog(value: boolean) {
-      this.showPaymentDetails = value;
-      if (value === false) {
-        this.store.commit(MutationType.SelectPayment, null);
-      }
     },
   },
 };

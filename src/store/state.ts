@@ -28,6 +28,8 @@ export type State = {
   payments: Payment[];
   selectedPayment: Payment | null;
   isPaymentDetailsOpen: boolean;
+  isUserDetailsOpen: boolean;
+  isTodoListOpen: boolean;
 };
 
 export const state: State = {
@@ -37,4 +39,6 @@ export const state: State = {
   payments: [],
   selectedPayment: null,
   isPaymentDetailsOpen: false,
+  isUserDetailsOpen: false,
+  isTodoListOpen: false,
 };

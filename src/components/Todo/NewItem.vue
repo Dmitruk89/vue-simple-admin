@@ -13,7 +13,6 @@
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
-
 import { useStore } from "@/store";
 import { TodoItem } from "@/store/state";
 import { MutationType } from "@/store/mutations";

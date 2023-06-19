@@ -1,7 +1,7 @@
 <template>
   <v-dialog
-    v-model="showPaymentDetails"
-    persistant
+    v-model="dialogValue"
+    @click:outside="closeDialog"
     width="auto"
     min-width="500px"
   >
@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent } from "vue";
 import { useStore } from "@/store";
 import { MutationType } from "@/store/mutations";
 
@@ -37,14 +37,21 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const payment = computed(() => store.state.selectedPayment);
-    const showPaymentDetails = computed(() => store.state.isPaymentDetailsOpen);
-    //const showPaymentDetails = ref(store.state.isPaymentDetailsOpen);
-    return { payment, store, showPaymentDetails };
+    return { payment, store };
+  },
+  computed: {
+    dialogValue: {
+      get(): boolean | undefined {
+        return this.store.state.isPaymentDetailsOpen;
+      },
+      set(value: boolean) {
+        this.store.commit(MutationType.SetIsPaymentDetails, value);
+      },
+    },
   },
   methods: {
     closeDialog() {
-      this.$emit("update:dialog", false);
-      this.store.commit(MutationType.SetPaymentDetails, false);
+      this.store.commit(MutationType.SetIsPaymentDetails, false);
       this.store.commit(MutationType.SelectPayment, null);
     },
   },

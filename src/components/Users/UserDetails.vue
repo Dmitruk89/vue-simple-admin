@@ -1,5 +1,11 @@
 <template>
-  <v-dialog v-model="dialogValue" scrollable width="auto" min-width="500px">
+  <v-dialog
+    v-model="dialogValue"
+    scrollable
+    width="auto"
+    min-width="500px"
+    @click:outside="closeDialog"
+  >
     <v-card>
       <v-card-title>Manage user info</v-card-title>
       <v-divider></v-divider>
@@ -76,23 +82,23 @@ export default defineComponent({
         phone: userphoneText.value,
       };
       store.commit(MutationType.UpdateUser, updatedUser);
-      usernameText.value = "";
     };
-    return { user, usernameText, useremailText, userphoneText, updateUser };
-  },
-  props: {
-    dialog: {
-      type: Boolean,
-      required: true,
-    },
+    return {
+      user,
+      store,
+      usernameText,
+      useremailText,
+      userphoneText,
+      updateUser,
+    };
   },
   computed: {
     dialogValue: {
       get(): boolean | undefined {
-        return this.dialog === undefined ? undefined : Boolean(this.dialog);
+        return this.store.state.isUserDetailsOpen;
       },
-      set(value: boolean | undefined) {
-        this.$emit("update:dialog", value);
+      set(value: boolean) {
+        this.store.commit(MutationType.SetIsUserDetails, value);
       },
     },
   },
@@ -103,11 +109,12 @@ export default defineComponent({
   },
   methods: {
     closeDialog() {
-      this.$emit("update:dialog", false);
+      this.store.commit(MutationType.SetIsUserDetails, false);
+      this.store.commit(MutationType.SelectUser, null);
     },
     saveDialog() {
       this.updateUser();
-      this.$emit("update:dialog", false);
+      this.store.commit(MutationType.SetIsUserDetails, false);
     },
   },
 });
