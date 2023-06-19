@@ -7,10 +7,27 @@
     <v-virtual-scroll :items="users" item-height="48">
       <template v-slot:default="{ item }">
         <v-list-item>
-          <v-list-item-title
-            >{{ item.username }}, {{ item.email }}</v-list-item-title
-          >
-          <v-list-item-subtitle>phone: {{ item.phone }}</v-list-item-subtitle>
+          <v-container>
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-list-item-title
+                  >{{ item.username }}, {{ item.email }}</v-list-item-title
+                >
+                <v-list-item-subtitle
+                  >phone: {{ item.phone }}</v-list-item-subtitle
+                >
+              </v-col>
+              <v-col cols="12" md="6" class="hidden-sm-and-down">
+                <div v-if="item.todo[0]">
+                  currently working on:
+                  <v-chip :color="item.todo[0].completed ? 'green' : 'grey'">{{
+                    item.todo[0].text
+                  }}</v-chip>
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
+
           <template v-slot:prepend>
             <v-icon class="bg-primary">mdi-account</v-icon>
           </template>

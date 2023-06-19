@@ -49,7 +49,7 @@ export default defineComponent({
   },
   methods: {
     closeDialog() {
-      this.store.commit(MutationType.SetIsPaymentDetails, false);
+      this.store.commit(MutationType.SetIsTodoList, false);
     },
   },
 });
