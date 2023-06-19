@@ -1,6 +1,6 @@
 <template>
   <v-app-bar>
-    <v-app-bar-title>Title</v-app-bar-title>
+    <v-app-bar-title>Admin Panel</v-app-bar-title>
 
     <template v-slot:append>
       <v-btn to="users" class="mr-2">

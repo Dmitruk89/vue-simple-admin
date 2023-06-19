@@ -7,7 +7,7 @@
     <v-virtual-scroll :items="users" item-height="48">
       <template v-slot:default="{ item }">
         <v-list-item>
-          <v-container>
+          <v-container class="mx-0">
             <v-row>
               <v-col cols="12" md="6">
                 <v-list-item-title

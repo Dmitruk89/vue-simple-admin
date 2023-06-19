@@ -3,7 +3,7 @@
     v-model="dialogValue"
     @click:outside="closeDialog"
     width="auto"
-    min-width="500px"
+    min-width="300px"
   >
     <v-card>
       <v-card-title>Payment {{ payment?.id }}</v-card-title>

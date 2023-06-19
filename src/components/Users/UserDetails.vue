@@ -1,9 +1,8 @@
 <template>
   <v-dialog
     v-model="dialogValue"
-    scrollable
     width="auto"
-    min-width="500px"
+    min-width="300px"
     @click:outside="closeDialog"
   >
     <v-card>
